@@ -7,11 +7,12 @@ using StupidTemplate.Patches;
 using System;
 using static StupidTemplate.Menu.Main;
 using UnityEngine;
-using StupidTemplate.Mods; // i used ii's temp, but change these references as needed.
+using StupidTemplate.Mods;
+using Facebook.WitAi.Utilities;
 
-namespace yourmenuname.UI
+namespace yourname.UI
 {
-    [BepInPlugin("org.yourname.gui", "Your Name's GUI", "1.0.0")] // feel free to change this to whatever you desire
+    [BepInPlugin("org.urname.gui", "put whatever u want here", "1.0.0")] // this is customizable
     public class Main : BaseUnityPlugin
     {
         private string inputText = "input something here";
@@ -28,15 +29,35 @@ namespace yourmenuname.UI
 
         public static bool modbox;
 
+        public static bool wasdcool;
+
+        public static float aaaaaa = 0f;
+
         public static string togglebuttontext = "+";
 
-        private Rect rectstuff = new Rect(60, 20, 500, 500);
-        
-        private int numpage;
+        private Color guicolor = Color.red;
 
-        private void OnGUI() // dont mess with this too much unless you know what your doing
+        private Rect rectstuff = new Rect(60, 20, 500, 500);
+        private int numpage;
+        private Color color1;
+        private Color color2;
+
+        void Update() // for RGB
         {
-            if (GUI.Button(new Rect(20, 0, 50, 20), togglebuttontext)) // toggle button for the gui
+            float r = Mathf.Abs(Mathf.Sin(aaaaaa * 0.4f));
+            float g = Mathf.Abs(Mathf.Sin(aaaaaa * 0.5f));
+            float b = Mathf.Abs(Mathf.Sin(aaaaaa * 0.6f));
+            guicolor = new Color(r, g, b);
+            aaaaaa += Time.deltaTime;
+        }
+        public void Start() // helps the rgb idk
+        {
+            ColorUtility.TryParseHtmlString("ffc1cc", out color1); 
+            ColorUtility.TryParseHtmlString("98FF98", out color2);
+        }
+        private void OnGUI() // the toggle button for the gui, dont rlly mess with this unless you know what ur doing
+        {
+            if (GUI.Button(new Rect(20, 0, 20, 20), togglebuttontext))
             {
                 if (isOpen == false)
                 {
@@ -47,7 +68,7 @@ namespace yourmenuname.UI
                 {
                     togglebuttontext = "+";
                     isOpen = false;
-                } // button text
+                }
             }
             if (isOpen)
             {
@@ -57,15 +78,15 @@ namespace yourmenuname.UI
         /*
          collumn 1 x: 20
          collumn 2 x: 200
-         change y by 30 every new button
-         USE THIS!! this will help organize your buttons for your gui.
+         change y by 30 every new button <- USE THESE! THESE ARE FOR MAKING YOUR BUTTONS
         */
         void MainGUI(int windowID)
         {
-            GUI.contentColor = Color.white;
-            GUI.backgroundColor = Color.blue;
+            GUI.color = guicolor;
+            GUI.backgroundColor = guicolor;
+            GUI.contentColor = guicolor;
             inputText = GUI.TextArea(new Rect(20, 50, 100, 20), inputText);
-            int page = numpage + 1; 
+            int page = numpage + 1;
             GUI.Label(new Rect(230, 20, 200, 20), "Page: " + page);
             switch (numpage)
             {
@@ -75,13 +96,13 @@ namespace yourmenuname.UI
                     {
                         PhotonNetworkController.Instance.AttemptToJoinSpecificRoom(inputText);
                     }
-                    // add other buttons here
+                    
                     if (GUI.Button(new Rect(0, 450, 500, 20), ">>>>>>>>>")) //forward 
                     {
                         numpage++;
                     }
 
-                    break;
+                break;
 
                 case 1: // page 2
 
@@ -98,7 +119,7 @@ namespace yourmenuname.UI
                     {
                         numpage--;
                     }
-                    break; // keep adding cases and breaks for different pages
+                    break;
             }
         }
     }
